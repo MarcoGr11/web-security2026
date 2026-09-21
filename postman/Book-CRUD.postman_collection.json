@@ -1,0 +1,381 @@
+{
+  "info": {
+    "name": "Book CRUD",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. GET all",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test(\"is array\", () => pm.expect(b).to.be.an(\"array\"));",
+              "pm.test(\"length >= 3\", () => pm.expect(b.length).to.be.at.least(3));",
+              "pm.test(\"every item has all fields\", () => b.forEach(x => [\"id\", \"name\", \"description\", \"author\", \"year\"].forEach(f => pm.expect(x).to.have.property(f))));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/books",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "books"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. GET by id (1)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test(\"has id\", () => pm.expect(b).to.have.property(\"id\"));",
+              "pm.test(\"has name\", () => pm.expect(b).to.have.property(\"name\"));",
+              "pm.test(\"has description\", () => pm.expect(b).to.have.property(\"description\"));",
+              "pm.test(\"has author\", () => pm.expect(b).to.have.property(\"author\"));",
+              "pm.test(\"has year\", () => pm.expect(b).to.have.property(\"year\"));",
+              "pm.test(\"id is 1\", () => pm.expect(b.id).to.eql(\"1\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/books/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "books",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. GET by id (999, not found)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 404\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/books/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "books",
+            "999"
+          ]
+        }
+      }
+    },
+    {
+      "name": "4. POST create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test(\"id matches\", () => pm.expect(b.id).to.eql(pm.collectionVariables.get(\"newBookId\")));",
+              "pm.test(\"name matches\", () => pm.expect(b.name).to.eql(\"Test Book\"));",
+              "pm.test(\"description matches\", () => pm.expect(b.description).to.eql(\"Created by Postman\"));",
+              "pm.test(\"author matches\", () => pm.expect(b.author).to.eql(\"Test Author\"));",
+              "pm.test(\"year matches\", () => pm.expect(b.year).to.eql(2024));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/books",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "books"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{newBookId}}\",\n  \"name\": \"Test Book\",\n  \"description\": \"Created by Postman\",\n  \"author\": \"Test Author\",\n  \"year\": 2024\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "5. GET created book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test(\"id matches\", () => pm.expect(b.id).to.eql(pm.collectionVariables.get(\"newBookId\")));",
+              "pm.test(\"name matches\", () => pm.expect(b.name).to.eql(\"Test Book\"));",
+              "pm.test(\"description matches\", () => pm.expect(b.description).to.eql(\"Created by Postman\"));",
+              "pm.test(\"author matches\", () => pm.expect(b.author).to.eql(\"Test Author\"));",
+              "pm.test(\"year matches\", () => pm.expect(b.year).to.eql(2024));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/books/{{newBookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "books",
+            "{{newBookId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "6. PUT update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test(\"id matches\", () => pm.expect(b.id).to.eql(pm.collectionVariables.get(\"newBookId\")));",
+              "pm.test(\"name matches\", () => pm.expect(b.name).to.eql(\"Updated Book\"));",
+              "pm.test(\"description matches\", () => pm.expect(b.description).to.eql(\"Updated by Postman\"));",
+              "pm.test(\"author matches\", () => pm.expect(b.author).to.eql(\"Test Author\"));",
+              "pm.test(\"year matches\", () => pm.expect(b.year).to.eql(2025));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/books/{{newBookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "books",
+            "{{newBookId}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{newBookId}}\",\n  \"name\": \"Updated Book\",\n  \"description\": \"Updated by Postman\",\n  \"author\": \"Test Author\",\n  \"year\": 2025\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "7. GET after update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test(\"id matches\", () => pm.expect(b.id).to.eql(pm.collectionVariables.get(\"newBookId\")));",
+              "pm.test(\"name matches\", () => pm.expect(b.name).to.eql(\"Updated Book\"));",
+              "pm.test(\"description matches\", () => pm.expect(b.description).to.eql(\"Updated by Postman\"));",
+              "pm.test(\"author matches\", () => pm.expect(b.author).to.eql(\"Test Author\"));",
+              "pm.test(\"year matches\", () => pm.expect(b.year).to.eql(2025));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/books/{{newBookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "books",
+            "{{newBookId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "8. DELETE",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/books/{{newBookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "books",
+            "{{newBookId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "9. GET after delete",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 404\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/books/{{newBookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "books",
+            "{{newBookId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "10. GET all after delete",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test(\"created book is gone\", () => pm.expect(b.map(x => x.id)).to.not.include(pm.collectionVariables.get(\"newBookId\")));",
+              "pm.test(\"length is 3\", () => pm.expect(b.length).to.eql(3));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/books",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "books"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "newBookId",
+      "value": "100"
+    }
+  ]
+}
