@@ -1,0 +1,154 @@
+// Author: MarcoGr11
+// Email: babunbogdan@gmail.com
+// Created: 07.10.2026
+// Course: Spring Security
+// Task №3. Basic Authorization
+
+### 1. Get all — happy
+GET http://localhost:8080/api/v1/books
+Authorization: Basic admin admin
+Accept: application/json
+
+> {%
+    client.test("1. Get all — happy", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 2. Get all — unhappy
+GET http://localhost:8080/api/v1/books
+Authorization: Basic admin wrongpass
+Accept: application/json
+
+> {%
+    client.test("2. Get all — unhappy", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
+
+### 3. Get one — happy
+GET http://localhost:8080/api/v1/books/1
+Authorization: Basic admin admin
+Accept: application/json
+
+> {%
+    client.test("3. Get one — happy", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 4. Get one — unhappy
+GET http://localhost:8080/api/v1/books/1
+Authorization: Basic admin wrongpass
+Accept: application/json
+
+> {%
+    client.test("4. Get one — unhappy", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
+
+### 5. Create — happy
+# CSRF protection blocks non-GET requests by default, so valid credentials still get 401.
+POST http://localhost:8080/api/v1/books
+Authorization: Basic admin admin
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "5",
+  "name": "Zakhar Berkut",
+  "description": "Historical novel",
+  "author": "Ivan Franko",
+  "year": 1883
+}
+
+> {%
+    client.test("5. Create — happy", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
+
+### 6. Create — unhappy
+POST http://localhost:8080/api/v1/books
+Authorization: Basic admin wrongpass
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "5",
+  "name": "Zakhar Berkut",
+  "description": "Historical novel",
+  "author": "Ivan Franko",
+  "year": 1883
+}
+
+> {%
+    client.test("6. Create — unhappy", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
+
+### 7. Update — happy
+# CSRF protection blocks non-GET requests by default, so valid credentials still get 401.
+PUT http://localhost:8080/api/v1/books/3
+Authorization: Basic admin admin
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "3",
+  "name": "Shadows of Forgotten Ancestors",
+  "description": "Updated description",
+  "author": "Mykhailo Kotsiubynsky",
+  "year": 1912
+}
+
+> {%
+    client.test("7. Update — happy", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
+
+### 8. Update — unhappy
+PUT http://localhost:8080/api/v1/books/3
+Authorization: Basic admin wrongpass
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "3",
+  "name": "Shadows of Forgotten Ancestors",
+  "description": "Updated description",
+  "author": "Mykhailo Kotsiubynsky",
+  "year": 1912
+}
+
+> {%
+    client.test("8. Update — unhappy", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
+
+### 9. Delete — happy
+# CSRF protection blocks non-GET requests by default, so valid credentials still get 401.
+DELETE http://localhost:8080/api/v1/books/4
+Authorization: Basic admin admin
+Accept: application/json
+
+> {%
+    client.test("9. Delete — happy", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
+
+### 10. Delete — unhappy
+DELETE http://localhost:8080/api/v1/books/4
+Authorization: Basic admin wrongpass
+Accept: application/json
+
+> {%
+    client.test("10. Delete — unhappy", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
