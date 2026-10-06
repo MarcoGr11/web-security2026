@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "books")
-public class Book {
+public class Book extends AuditTable {
 
     @Id
     private String id;
