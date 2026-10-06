@@ -1,0 +1,78 @@
+// Author: MarcoGr11
+// Email: babunbogdan@gmail.com
+// Created: 07.10.2026
+// Course: Spring Security
+// Task №4. CSRF & Audit
+
+### 1. Get all
+GET http://localhost:8080/api/v1/books
+Authorization: Basic admin admin
+Accept: application/json
+
+> {%
+    client.test("1. Get all", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 2. Get one
+GET http://localhost:8080/api/v1/books/1
+Authorization: Basic admin admin
+Accept: application/json
+
+> {%
+    client.test("2. Get one", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 3. Create
+POST http://localhost:8080/api/v1/books
+Authorization: Basic admin admin
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "4",
+  "name": "Zakhar Berkut",
+  "description": "Historical novel",
+  "author": "Ivan Franko",
+  "year": 1883
+}
+
+> {%
+    client.test("3. Create", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 4. Update
+PUT http://localhost:8080/api/v1/books/3
+Authorization: Basic admin admin
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "3",
+  "name": "Shadows of Forgotten Ancestors",
+  "description": "Updated: novella about Hutsul life",
+  "author": "Mykhailo Kotsiubynsky",
+  "year": 1912
+}
+
+> {%
+    client.test("4. Update", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 5. Delete
+DELETE http://localhost:8080/api/v1/books/4
+Authorization: Basic admin admin
+Accept: application/json
+
+> {%
+    client.test("5. Delete", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
