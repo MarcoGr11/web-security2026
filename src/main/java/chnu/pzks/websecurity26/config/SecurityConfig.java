@@ -17,6 +17,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -39,10 +41,15 @@ public class SecurityConfig {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails admin = User.builder().username("admin").password("{noop}admin").roles("ADMIN").build();
-        UserDetails user = User.builder().username("user").password("{noop}user").roles("USER").build();
-        UserDetails superadmin = User.builder().username("superadmin").password("{noop}superadmin").roles("SUPERADMIN").build();
+        UserDetails admin = User.builder().username("admin").password(passwordEncoder().encode("admin")).roles("ADMIN").build();
+        UserDetails user = User.builder().username("user").password(passwordEncoder().encode("user")).roles("USER").build();
+        UserDetails superadmin = User.builder().username("superadmin").password(passwordEncoder().encode("superadmin")).roles("SUPERADMIN").build();
         return new InMemoryUserDetailsManager(admin, user, superadmin);
     }
 }
