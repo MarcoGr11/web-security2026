@@ -1,0 +1,167 @@
+// Author: MarcoGr11
+// Email: babunbogdan@gmail.com
+// Created: 20.10.2026
+// Course: Spring Security
+// Task №6. Annotations
+
+### 1. admin -> /api/v1/access/hello-admin (expect 200)
+GET http://localhost:8080/api/v1/access/hello-admin
+Authorization: Basic admin admin
+
+> {%
+    client.test("1. admin -> /api/v1/access/hello-admin (expect 200)", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 2. admin -> /api/v1/access/hello-user (expect 403)
+GET http://localhost:8080/api/v1/access/hello-user
+Authorization: Basic admin admin
+
+> {%
+    client.test("2. admin -> /api/v1/access/hello-user (expect 403)", function () {
+        client.assert(response.status === 403, "Expected 403, got " + response.status);
+    });
+%}
+
+### 3. admin -> /api/v1/access/hello-man (expect 200)
+GET http://localhost:8080/api/v1/access/hello-man
+Authorization: Basic admin admin
+
+> {%
+    client.test("3. admin -> /api/v1/access/hello-man (expect 200)", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 4. admin -> /api/v1/books (expect 200)
+GET http://localhost:8080/api/v1/books
+Authorization: Basic admin admin
+Accept: application/json
+
+> {%
+    client.test("4. admin -> /api/v1/books (expect 200)", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 5. user -> /api/v1/access/hello-user (expect 200)
+GET http://localhost:8080/api/v1/access/hello-user
+Authorization: Basic user user
+
+> {%
+    client.test("5. user -> /api/v1/access/hello-user (expect 200)", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 6. user -> /api/v1/access/hello-admin (expect 403)
+GET http://localhost:8080/api/v1/access/hello-admin
+Authorization: Basic user user
+
+> {%
+    client.test("6. user -> /api/v1/access/hello-admin (expect 403)", function () {
+        client.assert(response.status === 403, "Expected 403, got " + response.status);
+    });
+%}
+
+### 7. user -> /api/v1/access/hello-man (expect 200)
+GET http://localhost:8080/api/v1/access/hello-man
+Authorization: Basic user user
+
+> {%
+    client.test("7. user -> /api/v1/access/hello-man (expect 200)", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 8. user -> /api/v1/books (expect 200)
+GET http://localhost:8080/api/v1/books
+Authorization: Basic user user
+Accept: application/json
+
+> {%
+    client.test("8. user -> /api/v1/books (expect 200)", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 9. superadmin -> /api/v1/access/hello-admin (expect 403)
+GET http://localhost:8080/api/v1/access/hello-admin
+Authorization: Basic superadmin superadmin
+
+> {%
+    client.test("9. superadmin -> /api/v1/access/hello-admin (expect 403)", function () {
+        client.assert(response.status === 403, "Expected 403, got " + response.status);
+    });
+%}
+
+### 10. superadmin -> /api/v1/access/hello-user (expect 403)
+GET http://localhost:8080/api/v1/access/hello-user
+Authorization: Basic superadmin superadmin
+
+> {%
+    client.test("10. superadmin -> /api/v1/access/hello-user (expect 403)", function () {
+        client.assert(response.status === 403, "Expected 403, got " + response.status);
+    });
+%}
+
+### 11. superadmin -> /api/v1/access/hello-man (expect 403)
+GET http://localhost:8080/api/v1/access/hello-man
+Authorization: Basic superadmin superadmin
+
+> {%
+    client.test("11. superadmin -> /api/v1/access/hello-man (expect 403)", function () {
+        client.assert(response.status === 403, "Expected 403, got " + response.status);
+    });
+%}
+
+### 12. superadmin -> /api/v1/books (expect 200)
+GET http://localhost:8080/api/v1/books
+Authorization: Basic superadmin superadmin
+Accept: application/json
+
+> {%
+    client.test("12. superadmin -> /api/v1/books (expect 200)", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 13. no auth -> /api/v1/books (expect 401)
+GET http://localhost:8080/api/v1/books
+Accept: application/json
+
+> {%
+    client.test("13. no auth -> /api/v1/books (expect 401)", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
+
+### 14. no auth -> /api/v1/access/hello-man (expect 401)
+GET http://localhost:8080/api/v1/access/hello-man
+
+> {%
+    client.test("14. no auth -> /api/v1/access/hello-man (expect 401)", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
+
+### 15. no auth -> / (expect 200)
+GET http://localhost:8080/
+
+> {%
+    client.test("15. no auth -> / (expect 200)", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 16. admin wrong password -> /api/v1/books (expect 401)
+GET http://localhost:8080/api/v1/books
+Authorization: Basic admin wrong
+Accept: application/json
+
+> {%
+    client.test("16. admin wrong password -> /api/v1/books (expect 401)", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
