@@ -11,6 +11,7 @@ package chnu.pzks.websecurity26.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,6 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -32,9 +34,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/api/v1/access/hello-admin").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/access/hello-user").hasRole("USER")
-                        .requestMatchers("/api/v1/access/hello-man").hasAnyRole("USER", "ADMIN")
+                        // replaced by @PreAuthorize annotations
+                        // .requestMatchers("/api/v1/access/hello-admin").hasRole("ADMIN")
+                        // .requestMatchers("/api/v1/access/hello-user").hasRole("USER")
+                        // .requestMatchers("/api/v1/access/hello-man").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
