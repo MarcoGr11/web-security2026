@@ -1,0 +1,171 @@
+// Author: MarcoGr11
+// Email: babunbogdan@gmail.com
+// Created: 09.11.2026
+// Course: Spring Security
+// Task №9. JWT Impl
+
+### 1. Login as admin
+POST http://localhost:8080/api/v1/auth/authenticate
+Content-Type: application/json
+
+{
+  "email": "admin@websecurity.local",
+  "password": "admin"
+}
+
+> {%
+    client.test("1. Login as admin", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+    client.global.set("admin_token", response.body.token);
+%}
+
+### 2. Login as user
+POST http://localhost:8080/api/v1/auth/authenticate
+Content-Type: application/json
+
+{
+  "email": "user@websecurity.local",
+  "password": "user"
+}
+
+> {%
+    client.test("2. Login as user", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+    client.global.set("user_token", response.body.token);
+%}
+
+### 3. Login as superadmin
+POST http://localhost:8080/api/v1/auth/authenticate
+Content-Type: application/json
+
+{
+  "email": "superadmin@websecurity.local",
+  "password": "superadmin"
+}
+
+> {%
+    client.test("3. Login as superadmin", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+    client.global.set("superadmin_token", response.body.token);
+%}
+
+### 4. admin -> hello-admin (expect 200)
+GET http://localhost:8080/api/v1/access/hello-admin
+Authorization: Bearer {{admin_token}}
+
+> {%
+    client.test("4. admin -> hello-admin", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 5. admin -> hello-user (expect 403)
+GET http://localhost:8080/api/v1/access/hello-user
+Authorization: Bearer {{admin_token}}
+
+> {%
+    client.test("5. admin -> hello-user", function () {
+        client.assert(response.status === 403, "Expected 403, got " + response.status);
+    });
+%}
+
+### 6. admin -> hello-man (expect 200)
+GET http://localhost:8080/api/v1/access/hello-man
+Authorization: Bearer {{admin_token}}
+
+> {%
+    client.test("6. admin -> hello-man", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 7. admin -> books (expect 200)
+GET http://localhost:8080/api/v1/books
+Authorization: Bearer {{admin_token}}
+
+> {%
+    client.test("7. admin -> books", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 8. user -> hello-user (expect 200)
+GET http://localhost:8080/api/v1/access/hello-user
+Authorization: Bearer {{user_token}}
+
+> {%
+    client.test("8. user -> hello-user", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 9. user -> hello-admin (expect 403)
+GET http://localhost:8080/api/v1/access/hello-admin
+Authorization: Bearer {{user_token}}
+
+> {%
+    client.test("9. user -> hello-admin", function () {
+        client.assert(response.status === 403, "Expected 403, got " + response.status);
+    });
+%}
+
+### 10. user -> hello-man (expect 200)
+GET http://localhost:8080/api/v1/access/hello-man
+Authorization: Bearer {{user_token}}
+
+> {%
+    client.test("10. user -> hello-man", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 11. user -> books (expect 200)
+GET http://localhost:8080/api/v1/books
+Authorization: Bearer {{user_token}}
+
+> {%
+    client.test("11. user -> books", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 12. superadmin -> hello-admin (expect 403)
+GET http://localhost:8080/api/v1/access/hello-admin
+Authorization: Bearer {{superadmin_token}}
+
+> {%
+    client.test("12. superadmin -> hello-admin", function () {
+        client.assert(response.status === 403, "Expected 403, got " + response.status);
+    });
+%}
+
+### 13. superadmin -> books (expect 200)
+GET http://localhost:8080/api/v1/books
+Authorization: Bearer {{superadmin_token}}
+
+> {%
+    client.test("13. superadmin -> books", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
+
+### 14. no token -> books (expect 401)
+GET http://localhost:8080/api/v1/books
+
+> {%
+    client.test("14. no token -> books", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
+
+### 15. no token -> / (expect 200)
+GET http://localhost:8080/
+
+> {%
+    client.test("15. no token -> /", function () {
+        client.assert(response.status === 200, "Expected 200, got " + response.status);
+    });
+%}
