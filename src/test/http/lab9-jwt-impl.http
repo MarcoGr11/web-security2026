@@ -169,3 +169,13 @@ GET http://localhost:8080/
         client.assert(response.status === 200, "Expected 200, got " + response.status);
     });
 %}
+
+### 16. broken token -> books (expect 401)
+GET http://localhost:8080/api/v1/books
+Authorization: Bearer abc.def.ghi
+
+> {%
+    client.test("16. broken token -> books", function () {
+        client.assert(response.status === 401, "Expected 401, got " + response.status);
+    });
+%}
